@@ -3,7 +3,7 @@ Starter repo describing best practices for local development and remote testing 
 
 ## Motivation
 
-While IDEs like Pycharm and VSCode are great for code development, they can put a big strain on a shared resource like Patas (ex: [SSHing through VSCode necessarily installs server-side VSCode environment](https://code.visualstudio.com/docs/remote/ssh)). To leverage the advantages of an IDE mindfully (and _demurely_), this repository describes best practices for developing code locally and testing said code remotely on Patas.
+While IDEs like Pycharm and VSCode are great for code development, they can strain shared resources like Patas (ex: [SSHing through VSCode necessarily installs server-side VSCode environment](https://code.visualstudio.com/docs/remote/ssh)) because every user SSHing through VSCode creates a separate (and unnecessary) copy of the VSCode server client. To leverage the advantages of an IDE mindfully (and _demurely_), this repository describes best practices for developing code locally and testing said code remotely on Patas.
 
 ## How to use this repo
 ### Big picture
@@ -20,7 +20,19 @@ _**When you're ready to test this code on Patas,**_ Commit and push your code an
 ```
 ssh <YOUR_USER>@patas.ling.washington.edu
 ```
-2. Check for SSH keys. 
+If you don't want to manually enter your password, add this to your `~/.ssh/config` file:
+```
+Host patas
+    HostName patas.ling.washington.edu
+    User <USERNAME>
+    IdentityFile ~/.ssh/id_rsa
+
+Host dryas
+    HostName dryas.ling.washington.edu
+    User <USERNAME>
+    IdentityFile ~/.ssh/id_rsa
+```
+2. On the remote server (assuming you completed step 1), check for SSH keys. 
 ```
 ls ~/.ssh # Should see id_rsa and id_rsa.pub or something like that
 ```
@@ -29,8 +41,9 @@ If they don't exist, generate a new key
 ```
 ssh-keygen -t rsa -b 4096 # Press enter to accept defaults without passphrase
 ```
-3. Add the public key to Github: **Settings > SSH and GPG keys > New SSH Key** (summarizing from [official documentation](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account#adding-a-new-ssh-key-to-your-account)) 
-4. On Patas, test the SSH connection:
+3. Add the public key to Github: **Settings > SSH and GPG keys > New SSH Key** (summarizing from [official documentation](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account#adding-a-new-ssh-key-to-your-account))
+
+5. On Patas, test the SSH connection:
 ```
 ssh -T git@github.com
 # You should get a console message like "Hi <GITHUB_USERNAME>! You've successfully authenticated, but GitHub does not provide shell access."
